@@ -31,22 +31,22 @@ class Board:
 
         # action is to move up and the empty square is NOT in the top row
         if action == "U" and blank_tile > 3:
-            # switch the tiles, empty tile & above tile
+            # switch the empty tile with above tile
             new_tiles[blank_tile], new_tiles[blank_tile - 4] = new_tiles[blank_tile - 4], new_tiles[blank_tile]
         
         # action is to move down and the empty square is NOT in the bottom row
         elif action == "D" and blank_tile < 12:
-            # switch the tiles, empty tile & below tile
+            # switch the empty tile with below tile
             new_tiles[blank_tile], new_tiles[blank_tile + 4] = new_tiles[blank_tile + 4], new_tiles[blank_tile]
         
         # action is to move left and the empty square is NOT in the left column
         elif action == "L" and blank_tile % 4 != 0:
-            # switch the tiles, empty tile & right tile
+            # switch the empty tile with right tile
             new_tiles[blank_tile], new_tiles[blank_tile - 1] = new_tiles[blank_tile - 1], new_tiles[blank_tile]
         
         # action is to move right and the empty square is NOT in the right column
         elif action == "R" and blank_tile % 4 != 1:
-            # switch the tiles, empty tile & left tile
+            # switch the empty tile with left tile
             new_tiles[blank_tile], new_tiles[blank_tile + 1] = new_tiles[blank_tile + 1], new_tiles[blank_tile]
         return Board(modified_tiles)
 
@@ -55,7 +55,9 @@ class Board:
 # This class defines the node on the search tree, consisting of state, parent and previous action
 class Node:
     def __init__(self, state, parent, action):
-        pass
+        self.state = state
+        self.parent = parent
+        self.action = action
 
     # Returns string representation of the state
     def __repr__(self):
