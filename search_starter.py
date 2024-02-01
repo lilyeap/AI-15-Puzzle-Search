@@ -66,8 +66,9 @@ class Search:
     def run_bfs(self, root_node):
         pass
 
+    # check if the current tiles is correct
     def goal_test(self, cur_tiles):
-        pass
+        return cur_tiles == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0]
 
     def solve(self, input):
 
