@@ -14,11 +14,8 @@ import sys
 
 # This class defines the state of the problem in terms of board configuration
 class Board:
-    # initialize the board
+   # initialize the board
     def __init__(self, tiles):
-        # set the board size to 4
-        self.size = 4 
-
         # convert the string array of numbers into an int array called tiles
         self.tiles = []
         for tile in tiles:
@@ -26,7 +23,32 @@ class Board:
 
     # This function returns the resulting state from taking particular action from current state
     def execute_action(self, action):
-        pass
+        # create a copy of the existing tiles
+        modified_tiles = self.tiles[:]
+
+        # find index where the empty tile is
+        blank_tile = new_tiles.index(0)
+
+        # action is to move up and the empty square is NOT in the top row
+        if action == "U" and blank_tile > 3:
+            # switch the tiles, empty tile & above tile
+            new_tiles[blank_tile], new_tiles[blank_tile - 4] = new_tiles[blank_tile - 4], new_tiles[blank_tile]
+        
+        # action is to move down and the empty square is NOT in the bottom row
+        elif action == "D" and blank_tile < 12:
+            # switch the tiles, empty tile & below tile
+            new_tiles[blank_tile], new_tiles[blank_tile + 4] = new_tiles[blank_tile + 4], new_tiles[blank_tile]
+        
+        # action is to move left and the empty square is NOT in the left column
+        elif action == "L" and blank_tile % 4 != 0:
+            # switch the tiles, empty tile & right tile
+            new_tiles[blank_tile], new_tiles[blank_tile - 1] = new_tiles[blank_tile - 1], new_tiles[blank_tile]
+        
+        # action is to move right and the empty square is NOT in the right column
+        elif action == "R" and blank_tile % 4 != 1:
+            # switch the tiles, empty tile & left tile
+            new_tiles[blank_tile], new_tiles[blank_tile + 1] = new_tiles[blank_tile + 1], new_tiles[blank_tile]
+        return Board(modified_tiles)
 
 
 
