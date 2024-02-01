@@ -14,9 +14,15 @@ import sys
 
 # This class defines the state of the problem in terms of board configuration
 class Board:
+    # initialize the board
     def __init__(self, tiles):
-        self.size = int(math.sqrt(len(tiles)))
+        # set the board size to 4
+        self.size = 4 
 
+        # convert the string array of numbers into an int array called tiles
+        self.tiles = []
+        for tile in tiles:
+            self.tiles.append(int(tile))
 
     # This function returns the resulting state from taking particular action from current state
     def execute_action(self, action):
