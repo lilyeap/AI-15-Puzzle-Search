@@ -1,21 +1,21 @@
-15 Puzzle Solver - Python
+15 Puzzle Solver - Python 3.10.12
+Lily Eap - CS 411
 
 To run the 15 Puzzle Solver, follow these steps:
-
 1. Open a terminal or command prompt.
-2. Navigate to the directory containing this README and the Python source code file (e.g., fifteen_puzzle.py).
-3. Run the Python script with the following command:
-4. The program will prompt you for the initial puzzle configuration. Enter it as a space-separated list of
-numbers with '0' representing the empty space.
-5. The program will display the solution moves, number of nodes expanded, time taken, and the memory used.
+2. Navigate to the directory containing this README and search.py.
+3. Modify the argument in the function on line 154 in search.py to try other board configurations.
+4. Run the Python script with the following command: 
+    python3 search.py
+
+The program will display the solution moves, number of nodes expanded, time taken, and the memory used.
 
 Example Input:
 1 0 2 4 5 7 3 8 9 6 11 12 13 10 14 15
 
-The Sample Output would look like:
-Moves: RDLDDRR
-Number of Nodes expanded: 361
-Time Taken: 0.238
-Memory Used: 704 KB
+Sample Output:
+Moves: R D L D D R R
+Number of expanded Nodes: 1007
+Time Taken: 0.04697084426879883
+Max Memory (Bytes): 991232
 
-Enjoy solving the 15 Puzzle!
