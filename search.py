@@ -85,7 +85,7 @@ class Search:
 
     # This function returns the list of children obtained after simulating the actions on current node
     def get_children(self, parent_node):
-        actions = ["U", "D", "L", "R"]
+        actions = ["R", "U", "D", "L"]
         children = []
 
         # for every action, we check the resulting state (the children)
@@ -112,10 +112,8 @@ class Search:
 
     # This function runs breadth first search from the given root node and returns path, number of nodes expanded and total time taken
     def run_bfs(self, root_node):
-        # store initial start time and initial mem usage
+        # store initial start time
         init_time = time.time()
-        process = psutil.Process(os.getpid())
-        init_mem = process.memory_info().rss
 
         # initialized frontier with root node and set to keep track of what states we've explored
         reached = set()
@@ -130,7 +128,12 @@ class Search:
             if self.goal_test(node.state.tiles):
                 path = self.find_path(node)
                 expanded_nodes += 1
-                return path, expanded_nodes, time.time() - init_time, process.memory_info().rss - init_mem
+
+                frontier_mem = sys.getsizeof(frontier)
+                reached_mem = sys.getsizeof(reached)
+                total_mem = frontier_mem + reached_mem
+
+                return path, expanded_nodes, time.time() - init_time, total_mem
 
             # for each possible move that would result in a different state
             for child in self.get_children(node):
@@ -142,8 +145,13 @@ class Search:
                     frontier.append(child)
                     expanded_nodes += 1
 
+
+        frontier_mem = sys.getsizeof(frontier)
+        reached_mem = sys.getsizeof(reached)
+        total_mem = frontier_mem + reached_mem
+
         # goal state is not found... 
-        return [], expanded_nodes, time.time() - init_time, process.memory_info().rss - init_mem
+        return [], expanded_nodes, time.time() - init_time, total_mem
 
 
     # check if the current tiles is correct
@@ -164,4 +172,4 @@ class Search:
 # Testing the algorithm locally
 if __name__ == '__main__':
     agent = Search()
-    agent.solve("1 0 2 4 5 7 3 8 9 6 11 12 13 10 14 15")
+    agent.solve("1 0 3 4 5 2 6 8 9 10 7 11 13 14 15 12")
