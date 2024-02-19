@@ -1,5 +1,5 @@
-#CS 411 - Assignment 3
-#Breadth First Search on 15 Puzzle
+#CS 411 - Assignment 4
+#Iterative Deepening Depth First Search on 15 Puzzle
 #Lily Eap
 #Spring 2024
 
@@ -63,10 +63,11 @@ class Board:
 
 # This class defines the node on the search tree, consisting of state, parent and previous action
 class Node:
-    def __init__(self, state, parent, action):
+    def __init__(self, state, parent, action, depth = 0):
         self.state = state
         self.parent = parent
         self.action = action
+        self.depth = depth
 
     # Returns string representation of the state
     def __repr__(self):
@@ -108,50 +109,71 @@ class Search:
         # we reverse the actions list to get it in the order from parent state to final state
         actions.reverse()
         return actions
+    
+    # This function checks if a path from the child to its parent results in a cycle
+    def is_cycle(self, node):
+        seen = set()
+        while node is not None:
 
-
-    # This function runs breadth first search from the given root node and returns path, number of nodes expanded and total time taken
-    def run_bfs(self, root_node):
-        # store initial start time
-        init_time = time.time()
-
-        # initialized frontier with root node and set to keep track of what states we've explored
-        reached = set()
-        frontier = deque([root_node])
-        expanded_nodes = 0 
-
+            # if we have encountered this node in the path already
+            if node in seen:
+                return True  
+            seen.add(node)
+            node = node.parent
+        return False
+    
+    # This function runs depth limited search from the given node and returns 
+    def dls(self, problem, limit, reached):
+        frontier = [problem]
+        result = "failure"
         while frontier:
-            # remove the node to be explored
-            node = frontier.popleft()
+            node = frontier.pop()
+            if node in reached:
+                continue
             
-            # if the current state is the goal state, backtrack to find solution path and finish program
+            reached.add(node)
+
+            # check if node is at goal state
             if self.goal_test(node.state.tiles):
+                return node, "win", sys.getsizeof(frontier) + sys.getsizeof(reached)
+            
+            # if the node's depth exceeds the limit
+            if node.depth > limit:
+                result = "cutoff"
+
+            else:
+                # add children to the frontier if we haven't seen them before and they don't form a cycle
+                for child in self.get_children(node):
+                    if child not in reached and not self.is_cycle(child): 
+                        frontier.append(Node(child.state, node, child.action, node.depth + 1))
+        
+        return None, result, sys.getsizeof(frontier) + sys.getsizeof(reached)
+
+
+    # This function runs IDDFS from the given root node and returns path, number of nodes expanded and total time taken
+    def run_iddfs(self, root_node):
+        depth = 0
+        start_time = time.time()
+        reached = set()
+        max_memory = 0
+
+        while True:
+            # perform depth limited search for the current depth
+            node, result, found_mem = self.dls(root_node, depth, reached)
+            max_memory = max(max_memory, found_mem)
+
+            # according to the result of DLS
+            if result == "win":
+                end_time = time.time()
                 path = self.find_path(node)
-                expanded_nodes += 1
-
-                frontier_mem = sys.getsizeof(frontier)
-                reached_mem = sys.getsizeof(reached)
-                total_mem = frontier_mem + reached_mem
-
-                return path, expanded_nodes, time.time() - init_time, total_mem
-
-            # for each possible move that would result in a different state
-            for child in self.get_children(node):
-
-                # if we have never seen that state before (reached) 
-                # and if it's not a state that we already planned to explore (not in frontier)
-                if tuple(child.state.tiles) not in reached and child not in frontier:
-                    reached.add(tuple(child.state.tiles))
-                    frontier.append(child)
-                    expanded_nodes += 1
-
-
-        frontier_mem = sys.getsizeof(frontier)
-        reached_mem = sys.getsizeof(reached)
-        total_mem = frontier_mem + reached_mem
-
-        # goal state is not found... 
-        return [], expanded_nodes, time.time() - init_time, total_mem
+                return path, len(reached), (end_time - start_time), max_memory
+            elif result == "loss":
+                end_time = time.time()
+                return [], len(reached), (end_time - start_time), max_memory
+            
+            depth += 1
+            # reset reached for the new depth
+            reached = set()
 
 
     # check if the current tiles is correct
@@ -162,7 +184,7 @@ class Search:
 
         initial_list = input.split(" ")
         root = Node(Board(initial_list), None, None)
-        path, expanded_nodes, time_taken, memory_consumed = self.run_bfs(root)
+        path, expanded_nodes, time_taken, memory_consumed = self.run_iddfs(root)
         print("Moves: " + " ".join(path))
         print("Number of expanded Nodes: " + str(expanded_nodes))
         print("Time Taken: " + str(time_taken))
