@@ -1,17 +1,9 @@
 from heapq import heapq, heapify, heappush, heappop 
 from collections import defaultdict 
+import psutil
+import time
 
 class Search:
-    # def get_children(self, parent_node):
-    #     actions = ["R", "U", "D", "L"]
-    #     children = []
-
-    #     # for every action, we check the resulting state (the children)
-    #     for action in actions:
-    #         new_state = parent_node.state.execute_action(action)
-    #         if new_state.tiles != parent_node.state.tiles: # if the action causes the board to look the same
-    #             children.append(Node(new_state, parent_node, action))
-    #     return children
 
     # check if the current tiles is correct
     def goal_test(self, cur_tiles):
@@ -19,7 +11,7 @@ class Search:
 
 
 
-    def reconstructPath(cameFrom, current):
+    def reconstructPath(self, cameFrom, current):
         total_path = {current}
         while (current in cameFrom.keys):
             current = cameFrom[current]
@@ -28,7 +20,7 @@ class Search:
         return total_path
 
 
-    def A_Star(start, goal, h):
+    def A_Star(self, start, goal, h):
         # initialize a minheap, only start is known
         open_set = []
         heapq.heappush(open_set, (h(start), start))
@@ -42,12 +34,17 @@ class Search:
         fScore = defaultdict(lambda: float('inf'))
         fScore[start] = h(start)
 
-        # while open_set:
-        #     current_priority, current = heapq.heappop(open_set)
+        start_time = time.time()
+        reached = set()
 
-        #     if current == goal:
-        #         return reconstructPath(current.parent, current)
-
+        while open_set:
+            current_priority, current = heapq.heappop(open_set)
+            memory_used = psutil.Process().memory_info().rss / 1024  # Memory usage in KB
+            if current == goal:
+                end_time = time.time()
+                path = self.reconstructPath(current.parent, current)
+                return path, len(reached), (end_time - start_time), memory_used
+        
         #     for neighbor in neighbors[current]:
         #         tentative_g_score = gScore[current] + d(current, neighbor)
 
@@ -71,3 +68,7 @@ class Search:
         print("Max Memory (Bytes): " + str(memory_consumed))
         return "".join(path)
 
+
+if __name__ == '__main__':
+    agent = Search()
+    agent.solve("1 3 4 8 5 2 0 6 9 10 7 11 13 14 15 12")
