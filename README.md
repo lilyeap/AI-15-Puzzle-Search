@@ -1,6 +1,6 @@
-# Spring 2024 Assignments
+# Artificial Intelligence Assignments
 
-## Professor Piotr
+## SPR 24 Professor Piotr
 
 ### Using BFS, IDDFS, and A* Search to Solve 15-Puzzle
 
