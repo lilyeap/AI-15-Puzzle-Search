@@ -4,8 +4,8 @@ Lily Eap - CS 411
 To run the 15 Puzzle Solver, follow these steps:
 1. Open a terminal or command prompt.
 2. Navigate to the directory containing this README and search.py.
-3. Modify the argument in the function on line 109 in search.py to try other board configurations.
-3. Modify the argument in the function on line 99 in search.py to try other heuristics.
+3. Modify the argument in the function on line 120 in search.py to try other board configurations.
+3. Modify the argument in the function on line 110 in search.py to try other heuristics.
         for manhattan distance heuristic: heuristic="manhattan"
         for misplaced heuristic: initial_list, heuristic="misplaced"
 4. Run the Python script with the following command: 
