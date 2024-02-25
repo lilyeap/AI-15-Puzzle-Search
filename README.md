@@ -12,3 +12,4 @@ Develop algorithms to solve the 15-Puzzle using the following search strategies:
 - **Breadth-First Search (BFS)**
 - **Iterative Deepening Depth-First Search (IDDFS)**
 - **A* Search**
+- **Iterative Deepening A* Search**
